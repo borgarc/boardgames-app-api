@@ -20,3 +20,4 @@ from django.urls import path
 urlpatterns = [
     path('admin/', admin.site.urls),
 ]
+1+1=2

@@ -26,4 +26,4 @@ jobs:
             - name: Tests
               run: docker compose run --rm app sh -c "python manage.py test"
             - name: Lint
-              run: docker compose run --rm app sh -c "ruff check ."
+              run: docker compose run --rm -e RUFF_CACHE=/tmp/.ruff_cache app sh -c "ruff check ."

@@ -4,7 +4,6 @@ name: Checks
 on:
   workflow_dispatch:   # ▶️ botón "Run workflow"
   push:
-    branches: [main]
 
 jobs:
     test-lint:

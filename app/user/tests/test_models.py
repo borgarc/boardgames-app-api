@@ -2,8 +2,9 @@
 Tests for the models in the core app.
 """
 
-from django.test import TestCase
 from django.contrib.auth import get_user_model
+from django.test import TestCase
+
 
 class ModelTests(TestCase):
     """Tests for the models."""

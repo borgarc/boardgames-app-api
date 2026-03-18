@@ -15,7 +15,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         """We can create a user without permissions,
-           for anything else we need to be authenticated.
+           for anything else we need to be authenticated.i
         """
         if self.action == 'create':
             return [permissions.AllowAny()]

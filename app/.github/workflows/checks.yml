@@ -4,7 +4,7 @@ name: Checks
 on:
   workflow_dispatch:
   push:
-  branches: [main]
+    branches: [main]
 jobs:
   test-lint:
     name: Test and lint

@@ -4,7 +4,7 @@ name: Checks
 on:
   workflow_dispatch:
   push:
-
+  branches: [main]
 jobs:
   test-lint:
     name: Test and lint
@@ -13,7 +13,7 @@ jobs:
     if: |
       github.event_name == 'workflow_dispatch' ||
       (github.event_name == 'push' &&
-      contains(github.event.commits[0].message, '[run-ci]'))
+      contains(github.event.head_commit.message, '[run-ci]'))
 
     steps:
       - name: Loging to docker hub

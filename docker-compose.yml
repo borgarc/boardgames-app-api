@@ -1,6 +1,8 @@
 services:
   app:
     image: boardgames-app:latest
+    build:
+      context: .
     ports:
       - "8000:8000"
     volumes:

@@ -1,6 +1,6 @@
 [tool.ruff]
 line-length = 88
-target-version = "py312"
+target-version = "py311"
 
 exclude = [
     ".git",
@@ -16,3 +16,9 @@ ignore = ["E501"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["S101"]
+
+[tool.pyright]
+include = ["."]
+extraPaths = ["/usr/local/lib/python3.11/site-packages"]
+typeCheckingMode = "off"
+pythonVersion = "3.11"

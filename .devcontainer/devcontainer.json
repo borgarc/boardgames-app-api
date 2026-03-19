@@ -13,7 +13,7 @@
 
 	// The optional 'workspaceFolder' property is the path VS Code should open by default when
 	// connected. This is typically a file mount in .devcontainer/docker-compose.yml
-	"workspaceFolder": "/app",
+	"workspaceFolder": "/boardgames",
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	"features": {
@@ -43,13 +43,18 @@
 				"ms-azuretools.vscode-docker",
 				"eamodio.gitlens",
 				"charliermarsh.ruff"
-			]
+			],
+			"settings": {
+				"python.analysis.extraPaths": ["/app"],
+            	"python.autoComplete.extraPaths": ["/app"]
+			}
 		}
 	},
 
 	"remoteEnv": {
 		"DJANGO_SETTINGS_MODULE": "app.settings",
-		"MANAGE_PY_PATH": "/app/manage.py"
+		"MANAGE_PY_PATH": "manage.py",
+		"PYTHONPATH": "/boardgames"
 	}
 
 	// Uncomment to connect as an existing user other than the container default. More info: https://aka.ms/dev-containers-non-root.

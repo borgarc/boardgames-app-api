@@ -32,4 +32,3 @@ services:
 volumes:
   dev-db-data:
     driver: local
-

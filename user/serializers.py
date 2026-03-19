@@ -2,8 +2,12 @@
 Serializers for the user API View.
 """
 
+from typing import cast
+
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+
+from user.models import UserManager
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -25,4 +29,5 @@ class UserSerializer(serializers.ModelSerializer):
 
     def update(self, user, validated_data):
         """Update user hashing pass if necesary."""
-        return get_user_model().objects.update_user(user, **validated_data)
+        manager = cast(UserManager, get_user_model().objects)
+        return manager.update_user(user, **validated_data)

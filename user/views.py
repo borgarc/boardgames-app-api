@@ -1,10 +1,12 @@
 """
 Views for the user API.
 """
+from typing import cast
 
 from django.contrib.auth import get_user_model
 from rest_framework import permissions, viewsets
 
+from user.models import UserManager
 from user.serializers import UserSerializer
 
 
@@ -24,4 +26,5 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def perform_destroy(self, user):
         """Deactivate the user."""
-        get_user_model().objects.deactivate_user(user)
+        manager = cast(UserManager, get_user_model().objects)
+        manager.deactivate_user(user)

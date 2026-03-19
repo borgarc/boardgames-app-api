@@ -21,6 +21,7 @@ class PublicUserApiTests(TestCase):
             name='Original Name'
         )
         self.detail_url = reverse('user:user-detail', args=[self.user.id])
+        self.client.force_authenticate(user=self.user)
 
     def test_create_user_success(self):
         """Test creating a new user is successful."""

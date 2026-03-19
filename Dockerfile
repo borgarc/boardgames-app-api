@@ -5,7 +5,7 @@ ENV PYTHONUNBUFFERED=1
 
 COPY ./requirements.txt /tmp/requirements.txt
 COPY ./requirements.dev.txt /tmp/requirements.dev.txt
-COPY ./ /app
+COPY . /app
 WORKDIR /app
 EXPOSE 8000
 
@@ -23,4 +23,5 @@ RUN pip install --upgrade pip && \
 
 ENV PATH="/py/bin:$PATH"
 
+RUN mkdir -p /tmp && chmod 1777 /tmp
 USER django-user

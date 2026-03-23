@@ -16,19 +16,62 @@ services:
       - DB_NAME=boardgames
       - DB_USER=devuser
       - DB_PASSWORD=devpass
+      - CELERY_BROKER_URL=redis://redis:6379/0
     depends_on:
       - db
+      - redis
 
   db:
     image: postgres:15-alpine
     volumes:
       - dev-db-data:/var/lib/postgresql/data
     container_name: boardgames-db
+    ports:
+      - "5432:5432"
     environment:
       - POSTGRES_DB=boardgames
       - POSTGRES_USER=devuser
       - POSTGRES_PASSWORD=devpass
+  redis:
+    image: redis:7-alpine
+    container_name: boardgames-redis
+    volumes:
+      - redis-data:/data
+  worker:
+    build:
+      context: .
+    image: boardgames-app:latest
+    volumes:
+      - ./:/boardgames
+    command: celery -A app worker --loglevel=info
+    environment:
+      - DB_HOST=db
+      - DB_NAME=boardgames
+      - DB_USER=devuser
+      - DB_PASSWORD=devpass
+      - CELERY_BROKER_URL=redis://redis:6379/0
+    depends_on:
+      - db
+      - redis
+  beat:
+    build:
+      context: .
+    image: boardgames-app:latest
+    volumes:
+      - ./:/boardgames
+    command: celery -A app beat --loglevel=info -s /tmp/celerybeat-schedule
+    environment:
+      - DB_HOST=db
+      - DB_NAME=boardgames
+      - DB_USER=devuser
+      - DB_PASSWORD=devpass
+      - CELERY_BROKER_URL=redis://redis:6379/0
+    depends_on:
+      - db
+      - redis
 
 volumes:
   dev-db-data:
+    driver: local
+  redis-data:
     driver: local

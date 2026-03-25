@@ -1,15 +1,9 @@
-from abc import ABC, abstractmethod
-
 from app.settings import GAME_CATALOG_SOURCE
-from game.repositories import bgg_catalog_repository, csv_catalog_repository
+from game.repositories.bgg_catalog_repository import BGGCatalogRepository
+from game.repositories.csv_catalog_repository import CSVCatalogRepository
 
 
 def get_catalog_repository():
     if GAME_CATALOG_SOURCE == 'CSV':
-        return csv_catalog_repository()
-    return bgg_catalog_repository()
-
-class CatalogRepository(ABC):
-    @abstractmethod
-    def update_catalog(self):
-        """Abstract method to implement the update catalog"""
+        return CSVCatalogRepository()
+    return BGGCatalogRepository()

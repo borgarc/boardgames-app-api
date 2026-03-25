@@ -12,7 +12,7 @@ class BoardGame(models.Model):
     year_published = models.IntegerField(null=True, blank=True)
     min_players = models.PositiveIntegerField(null=True)
     max_players = models.PositiveIntegerField(null=True)
-    playing_time = models.PositiveIntegerField(null=True)  # en minutos
+    playing_time = models.PositiveIntegerField(null=True)
     image_url = models.URLField(max_length=500, null=True, blank=True)
     rating = models.FloatField(default=0.0)
     last_updated = models.DateTimeField(auto_now=True)

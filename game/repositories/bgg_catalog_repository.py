@@ -5,30 +5,21 @@ import requests
 from django.db.models import Max
 
 from game.models import BoardGame
-from game.repositories import CatalogRepository
+from game.repositories.catalog_repository import CatalogRepository
 
 
 class BGGCatalogRepository(CatalogRepository):
-    def update_catalog(self, batch_count):
+    def update_catalog(self):
         """
         batch_count: how many 20 packs of games we can use per execution.
         Deafult 200 games per execution.
         """
-        BGG_TOKEN = ""
-
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            'Authorization': f'Bearer {BGG_TOKEN}',
-            'Accept': 'application/xml, text/xml, */*',
-        }
-        session = requests.Session()
-        session.headers.update(headers)
-        # 1. Search las id on our db.
-        last_id_entry = BoardGame.objects.aggregate(Max('bgg_id'))['bgg_id__max']
-        start_id = (last_id_entry + 1) if last_id_entry else 1
-        
+        batch_count = 10
         batch_size = 20
-        current_id = start_id
+
+        session = self._set_headers()
+
+        current_id = self._get_current_id()
 
         for _ in range(batch_count):
             end_id = current_id + batch_size
@@ -53,6 +44,7 @@ class BGGCatalogRepository(CatalogRepository):
             except Exception as e:
                 print(f"Connection error: {e}")
                 break
+
     def parse_and_save_bgg_xml(self, xml_data):
         root = ElementTree.fromstring(xml_data)
         for item in root.findall('item'):
@@ -77,6 +69,26 @@ class BGGCatalogRepository(CatalogRepository):
 
             BoardGame.objects.update_or_create(bgg_id=bgg_id, defaults=defaults)
 
+    def _get_current_id(self):
+        last_id_entry = BoardGame.objects.aggregate(Max('bgg_id'))['bgg_id__max']
+        start_id = (last_id_entry + 1) if last_id_entry else 1
+        
+        current_id = start_id
+
+        return current_id
+
+    def _set_headers(self):
+        BGG_TOKEN = ""
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Authorization': f'Bearer {BGG_TOKEN}',
+            'Accept': 'application/xml, text/xml, */*',
+        }
+        session = requests.Session()
+        session.headers.update(headers)
+
+        return session
+
     def _get_val(self, item, tag):
         node = item.find(tag)
         return node.get('value') if node is not None else None
@@ -84,4 +96,3 @@ class BGGCatalogRepository(CatalogRepository):
     def _get_rating(self, item):
         rating_node = item.find(".//average")
         return float(rating_node.get('value')) if rating_node is not None else 0.0
-    
